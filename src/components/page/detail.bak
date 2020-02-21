@@ -1,0 +1,533 @@
+<template>
+  <div id="page" style="position: relative;" class="video-page">
+    <Header></Header>
+    <Slidebar @child_event="pslidefunc" ref="sidebar"></Slidebar>
+    <div id="main">
+      <div id="ad-header-mobile-contener">
+        <div id="ad-header-mobile" class=" ad-mobilerectangle ad-support-mobile" style="display:none;">
+          <video playsinline="" loop="" disableremoteplayback="" autoplay="" src="https://cdnegc.trafficfactory.biz/banners/91/bb/43/68b84405b8a4a4ced064bb6e0a8e7b8f.mp4"></video><a href="http://rpc-php.trafficfactory.biz/click/.7613NtLnDdHnGFlXyeKXgsGIA2hFY74Jcn0WLFJwgcM3yKXBgLXzuGZq2ieigN26pOuRh2gFEZnYH3Jdk6txpuDa2ejHGBPmuOBzhOb7JuA0chKkQrDBec9ZOSbKPrjA1E8LRmjkzP4vpizKoF8UsQxBczODP9rZ3osMG1Sj3svPil9SOBqk-0RUv0ZkYKwRraJGxY3TIOJdeeS_iGP3xmXD6y4CuBg49xoUnM4E56oSX5ihJsxDtJM_6YI-GW9n5swLtgojY3sQIt2uk8HduC-dhJHMx5mId6M-s-rTM375VnQz0aErVUHgut7L2AGu1b7gK47X5M3etm35SUpuTcZBxA==/05e0f79885742ef51bb12c138e4973ce" target="_blank" rel="noopener"></a>
+        </div>
+      </div>
+      <h2 class="page-title">{{urVideo.title}} <span class="duration">({{urVideo.view_times}})次观看</span> </h2>
+      <div class="video-metadata video-tags-list ordered-label-list cropped">
+        <ul>
+          <li v-for="site in urVideo.tags">
+            <router-link :to="'/lista'+site" class="btn btn-default label main uploader-tag hover-name"><span class="name">{{site}}</span></router-link>
+          </li>
+        </ul>
+      </div>
+      <div id="content"> 
+        <!--
+        <div id="video-ad" class="mobile-hide ad-square ad-support-desktop"><a href="http://rpc-php.trafficfactory.biz/click/.3639UUHtBJ9p59rT8gxQIBs4NsbYVLk3i7AH8Jod5xiO-Jc-cvO9xxe87_ECcDIusumEsjgyiLXXQHGI1kkPHKJJTOxR9Rg6dA-BdWv5IPP3ZhnTCY0G66lJm9T0vORJIgHWH3E81UWX3m3s94GjvatOFt6ua98o0cfw54lCdnHBNQ3H4h2KiDSw5aP_-gBTU-EMIoYCU4p4ygy0VmZFJ4K40ZjB5hmmA9yOx4QgtrTAW9vY5jSkVj4BYvpTgTZeVgs1sNCpt-Hn_sGDezCNeuZovtJDxrzuCjec-NIVrRHuClm_XzxgmAFVPCxA5q7UTH0My1bWHWxeSXd3KI5v8VmQr2pwIa3WxkeZUVqtXR2HCEs=/92b526e5da406cb700f21de29731d7c0" target="_blank" rel="noopener"><img src="https://cdnegc.trafficfactory.biz/banners/f6/a4/8d/302aa51dfc7639f0dff56aae00062e04.jpg"></a><a href="http://rpc-php.trafficfactory.biz/click/.2868IHKglmvucP-5wzQVE17mrEK1c97Sj3pn_bNGDGgPesPOwS7Id0FNYIHG4akv-cnG3TWKEjLHap4GfSBgBzTTsmz7odemLN1BI_W0UM6e1e8lctv6beXFon4kmgM6YDvzUIGBmcs3Fi2HhrCL2MurKDkzZxJ18Ub8A8aFupCy22RHvJNpwuTNkLGLFgLLtKzXNs7vvv09LM0L4jafA8D24CxJnykeY7o-3SF5ukDRs_fMEFXHWp9nbmnpzR3nI1VYQcyW21_-cL4AtUHXtIgPUnUWfQs-1Ok0_dpcsR91CDZ10kXGceVzKJEwtnBTlEoGvqOmngmH5yzjTl_wAHi_HxKXIcnyuEoNsZlbjL9VAKg=/c5e68bef50698c1e68bad13bccb4b10c" target="_blank" rel="noopener">
+        <video playsinline="" loop="" disableremoteplayback="" autoplay="" :src="newAvatar" controlsList='nofullscreen nodownload noremote nofootbar  noremoteplayback' id="video-9012899_html5_api" controls="true"></video></a></div>
+        -->
+        <div id="video-player-bg">
+          <div id="html5video" style="line-height: normal; direction: ltr;" class="embed-responsive desktop">
+            <div class="embed-responsive-item pl-mobile" id="hlsplayer" style="cursor: none;">
+              <div class="video-bg-pic"><video id="video-9012899_html5_api" preload="auto" :src="newAvatar" x5-playsinline="" playsinline="" webkit-playsinline="" :muted="muted" :x5-video-player-fullscreen="fullFlag"  controlsList="nodownload"></video>
+                <div class="video-click-handler"></div>
+
+                <div class="video-pic" v-if="posterOnce"><img :src="urVideo.vimg"></div>
+  
+              </div>
+              <p class="video-title" style="left: 8.5px; top: 5.66667px; max-width: 308px; font-size: 12px; line-height: 16px; padding: 5px;">{{urVideo.title}}</p>
+              <div class="big-buttons" style="left: 111px; bottom: 102px;">
+                <div class="big-button pl-btn" style="visibility: hidden;"><img src="https://static-l3.xvideos-cdn.com/v3/img/player/icon-step-backward.svg" title="上個視頻"></div>
+                <div  v-if="!is_play" class="big-button play" style="padding: 4px 8px;" @click="doPlay()"><img src="https://static-l3.xvideos-cdn.com/v3/img/player/icon-play.svg" title="播放" style="width: 54px; height: 54px; padding: 9px;"><br></div>
+                <div class="big-button pl-btn" style="visibility: hidden;"><img src="https://static-l3.xvideos-cdn.com/v3/img/player/icon-step-forward.svg" title="下個視頻"></div>
+                <div class="big-buttons-sub"></div>
+              </div>
+              <!--
+              <div class="video-loader" style="width: 72px; height: 72px; left: 658px; bottom: 203px; display: none;">
+                <div class="buffer" style="height: 100%;"></div>
+                <div class="label" id="缓冲中..." style="line-height: 72px; font-size: 12px;">100%</div>
+              </div>
+              <div class="progress-bar-bg" style="height: 98px;"></div>
+               --> 
+              <div class="buttons-bar left"><img  @click="rePlay()" :src="vrepeat" title="重播" style="display: none; width: 18px; height: 18px; padding: 3px 5px;"><img v-if="!is_play" @click="doPlay()"  :src="vplay" title="播放" style="width: 16px; height: 16px; padding: 3px 5px;"><img :src="vpause"  title="暫停" style="width: 16px; height: 16px; padding: 3px 5px;" @click="doPause()" v-if="is_play">
+              <img  :src="vfull" v-if="is_voice" @click="cancelVoice()"  title="靜音" style="width: 20px; height: 20px; padding: 3px 5px;">
+              <img  v-if="!is_voice" @click="playVoice()"  :src="vmilus" title="取消靜音" style="width: 20px; height: 20px; padding: 3px 5px;">
+                <!--
+                <div class="volume-bar" style="background-image: url(&quot;https://static-l3.xvideos-cdn.com/v3/img/player/volume-bar-empty.svg&quot;); width: 54px; height: 16px;">
+                    
+                  <div class="volume-bar-fill" style="background-image: url(&quot;https://static-l3.xvideos-cdn.com/v3/img/player/volume-bar.svg&quot;); width: 100%;"></div>
+                </div>
+                  -->
+              </div>
+              <div class="buttons-bar right"><img @click="showFull()" :src="scFull" title="全屏" style="width: 20px; height: 20px; padding: 3px 5px;">
+              </div>
+              <ul class="settings-menu noselect" style="display: none; bottom: 28px; right: 30px; min-width: 160px; font-size: 12px;">
+                <li class="setting" id="quality"><span>Quality: Auto (360p)</span></li>
+                <li class="setting" id="speed"><span>Speed: 1.0 X</span></li>
+                <li class="setting" id="advanced"><span>高级</span></li>
+                <li class="setting" id="loop"><img class="setting-checkbox" src="https://static-l3.xvideos-cdn.com/v3/img/player/thick-0.svg" style="width: 12px;"><span>Loop</span></li>
+              </ul>
+              <ul class="settings-menu secondary-menu noselect" style="display: none;">
+                <li class="setting" id="autobuffer"><img class="setting-checkbox" src="https://static-l3.xvideos-cdn.com/v3/img/player/thick-1.svg" style="width: 12px;"><span>自動緩衝</span></li>
+                <li class="setting" id="ratio"><span>自動比率</span></li>
+                <li class="setting" id="previewimg"><img class="setting-checkbox" src="https://static-l3.xvideos-cdn.com/v3/img/player/thick-1.svg" style="width: 12px;"><span>預覽圖像</span></li>
+              </ul>
+              <ul class="settings-menu secondary-menu noselect" style="display: none;">
+                <li class="setting" id="speed0"><span>0.5 X</span></li>
+                <li class="setting" id="speed1"><span>0.8 X</span></li>
+                <li class="setting forced" id="speed2"><span>1.0 X</span></li>
+                <li class="setting" id="speed3"><span>1.5 X</span></li>
+                <li class="setting" id="speed4"><span>2.0 X</span></li>
+              </ul>
+              <div class="progress-bar-container" style="height: 4px; left: 2px; right: 2px; bottom: 28px;">
+                <div class="progress-bar" style="height: 100%;">
+                  <div class="bufferdiv">
+                    <div class="buffer-elt" style="background-color: rgb(222, 38, 0); left: 0.000493495%; width: 0.637535%;"></div>
+                  </div>
+                  <div class="cursor" style="height: 100%; left: 0%;"></div>
+                  <div class="seek-cursor" style="display: none;">
+                    <div class="seek-thumb" style="background-image: url(&quot;https://img-hw.xvideos-cdn.com/videos/thumbs169/a1/58/ce/a158ce1fd55da1d869f68b5a2c9d728a/mozaique.jpg&quot;); width: 138px; height: 78px; background-size: 828px 390px;">
+                      <div class="seek-text">00:00</div>
+                    </div>
+                  </div>
+                  <div class="fake-cursor-desktop-container" style="display: none;">
+                    <div class="fake-cursor-desktop"></div>
+                  </div>
+                  <div class="pgbar-cursor-detect" style="height: 56px;"></div>
+                </div>
+              </div>
+              <ul class="settings-menu secondary-menu noselect" style="display: none;">
+                <li class="setting forced" id="levelauto"><span>Auto</span></li>
+                <li class="setting active" id="level1"><span>360p</span></li>
+                <li class="setting" id="level0"><span>250p</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="related-videos" class="with-footer-ad with-ad">
+        <div class="mozaique">
+          <div class="thumb-block after-15 after-16 tbm-init-ok" v-for="site in curPageList" style="overflow:hidden;display:block;">
+            <div class="thumb-inside">
+              <div class="thumb">
+                <router-link :to="'/detail'+site.id" class="item-title" :title="site.title"><img :src="site.vimg"></router-link>
+              </div>
+              <button class="action-menu"><span class="open icon-f icf-ellipsis-v"></span><span class="close icon-f icf-close-thin"></span></button>
+            </div>
+            <div class="thumb-under" style="min-height:36px;">
+              <p class="title">
+                <router-link :to="'/detail'+site.id" class="item-title" :title="site.title">{{site.title}}</router-link>
+              </p>
+            </div>
+          </div>
+        </div>
+        <!--
+            <a href="javascript:void(0);" class="btn btn-default show-more">Show more related videos</a>
+            -->
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+
+import Header from './Header.vue'
+import Slidebar from './Slidebar.vue'
+import vfull from '@/assets/player/icon-volume-full.svg'
+import vmilus from '@/assets/player/icon-volume-mute-bold.svg'
+import vpause from '@/assets/player/icon-pause.svg'
+import vplay from '@/assets/player/icon-play.svg'
+import vrepeat from '@/assets/player/icon-repeat.svg'
+import scFull from '@/assets/player/icon-screen-fullscreen.svg'
+import avatar from '@/assets/setVideoUrlLow.mp4'
+export default {
+  name: 'Index',
+  components: {
+    Header,
+    Slidebar
+  },
+  data() {
+    return {
+      url: this.GLOBAL.serviceUrl + '?t=1',
+      tagUrl: this.GLOBAL.serviceUrl + '?t=3',
+      relateUrl: this.GLOBAL.serviceUrl + '?t=4',
+      likesUrl: this.GLOBAL.serviceUrl + '?t=5',
+      viewUrl: this.GLOBAL.serviceUrl + '?t=6',
+      topUrl: this.GLOBAL.serviceUrl + '?t=7',
+      tableData: [],
+      total: 0,
+      cur_page: 1,
+      pageSize: 0,
+      pageList: [],
+      tData: [],
+      avatar: avatar,
+      vrepeat: vrepeat,
+      vplay:vplay,
+      vpause:vpause,
+      vmilus:vmilus,
+      scFull:scFull,
+      vfull:vfull,
+      slide: 1,
+      curHeight: 'height:272.767px',
+      urVideo: {},
+      user_history: [],
+      cur_history: '',
+      isClick: 0,
+      firstLick: 0,
+      myPlayer: '',
+      topPageList: [],
+      is_voice: 1,
+      is_play: 0,
+      muted:false,
+      fullFlag:false,
+      posterOnce:1
+    }
+  },
+  created() {
+    //this.iniVideo()
+    this.getData();
+    this.getRelatedData()
+    this.getViewData()
+    this.getTopData()
+  },
+  mounted() {
+    //this.getData();
+  },
+  watch: {
+    '$route'(to, from) {
+      //this.iniVideo()
+      this.getData();
+      this.getRelatedData()
+      this.getViewData()
+      this.is_play = 0
+      this.posterOnce=1
+    }
+  },
+  computed: {
+    data() {
+      return this.tableData
+    },
+    curPageList() {
+      return this.pageList
+    },
+    newAvatar() {
+      return this.avatar
+    },
+    tagData() {
+      return this.tData
+    },
+    "msg"() {
+      return "asdff"
+    }
+  },
+  methods: {
+    rePlay() {
+
+    },
+    gtouchstart() {
+      console.log('cm')
+    },
+    like() {
+      if (this.isClick == 0) {
+        this.isClick = 1
+        this.urVideo.like_times += 1
+        if (this.firstLick == 0) {
+          this.firstLick = 1
+          this.addLikes()
+        }
+      } else {
+        this.isClick = 0
+        this.urVideo.like_times -= 1
+      }
+    },
+    addLikes() {
+      var a = this.commonfunc._getRandom()
+      var nonce = parseInt(a)
+      var token = this.commonfunc._gtokene(nonce)
+      var that = this
+      this.no = this.$route.params.no
+      var that = this
+      this.axios.post(this.likesUrl, this.qs.stringify({ no: this.no }), {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'nonce': nonce, 'token': token }
+      }).then(function(res) {
+
+      }).catch(function(err) {
+
+      })
+    },
+    setHistoryData() {
+      if (this.cur_history != undefined || this.cur_history != '') {
+        this.commonfunc.saveSearch(this.cur_history, 1);
+      }
+    },
+    //  controlsList='nofullscreen nodownload noremote nofootbar  noremoteplayback nomuted nounmuted' 
+    iniVideo() {
+      this.myPlayer = this.$video(document.getElementById('video-9012899_html5_api'), {
+        //确定播放器是否具有用户可以与之交互的控件。没有控件，启动视频播放的唯一方法是使用autoplay属性或通过Player API。
+        controls: true,
+        //自动播放属性,muted:静音播放
+        autoplay: false,
+        //建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
+        preload: "auto",
+        //设置视频播放器的显示宽度（以像素为单位）
+        // width: "800px",
+        //设置视频播放器的显示高度（以像素为单位）
+        // height: "400px",
+        fluid: true,
+        notSupportedMessage: '暂无法播放，请刷新或稍后再试',
+        controlBar: {
+          playToggle: true,
+          durationDisplay: true, // 总时间
+          progressControl: true, // 进度条
+          fullscreenToggle: true // 全屏
+        }   
+      });
+
+    },
+    showFull() {
+          var videoBox =  document.getElementById("video-9012899_html5_api")
+          if (videoBox.requestFullscreen) {
+              videoBox .requestFullscreen();
+          } else if (videoBox .mozRequestFullScreen) {
+              videoBox .mozRequestFullScreen();
+          } else if (videoBox .webkitRequestFullScreen) {
+              videoBox .webkitRequestFullScreen();
+          }  
+          this.fullFlag = true   
+    }, 
+    doPlay() {
+      this.myPlayer.play()
+      //console.log(this.is_play)
+      this.is_play = 1
+      this.posterOnce=0
+    },
+    doPause() {
+      this.myPlayer.pause()
+      this.is_play = 0
+    },
+    cancelVoice() {
+       this.muted = true
+       this.is_voice = 0
+    },
+    playVoice(){
+        this.muted = false
+        this.is_voice = 1
+    },
+    playVideo(url) {
+      let vdo = document.getElementById("video-9012899_html5_api")
+      vdo.src = url;
+      vdo.play();
+    },
+    getType(_type = 0) {
+      if (_type != this.ltype) {
+        this.tableData = []
+        this.more = this.cur_page = 1
+      } else {
+        return false
+      }
+      this.ltype = _type
+      this.getData();
+    },
+    loadMore() {
+      this.cur_page += 1
+      if (this.$route.params.k !== undefined) {
+        this.getKData();
+      } else {
+        this.getData();
+      }
+
+    },
+    pslidefunc(data) {
+      this.slide = parseInt(data)
+      if (!data) {
+        this.curHeight = 'height:287.403px'
+      } else {
+        this.curHeight = 'height:272.767px;'
+      }
+      console.log(this.curHeight)
+    },
+    refresh() {
+      this.getData();
+    },
+    curTitle(val) {
+      let obj = {};
+
+      obj = this.role_list.find((item) => {
+
+        return item.id === val;
+
+      });
+      this.selected_title = obj.title
+    },
+    // 分页导航
+    handleCurrentChange(val) {
+      this.cur_page = val;
+      this.getData();
+    },
+    // 获取 easy-mock 的模拟数据
+    getData() {
+      if (this.$route.params.no != '' || this.$route.params.no !== undefined) {
+        var a = this.commonfunc._getRandom()
+        var nonce = parseInt(a)
+        var token = this.commonfunc._gtokene(nonce)
+        var that = this
+        this.no = this.$route.params.no
+        var that = this
+        this.axios.post(this.url, this.qs.stringify({ no: this.no }), {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'nonce': nonce, 'token': token }
+        }).then(function(res) {
+          if (parseInt(res.data.message) == 0) {
+            that.iniVideo()
+            that.myPlayer.src(res.data.data.lowUrl)
+            that.avatar = res.data.data.lowUrl
+            that.myPlayer.load()
+            //that.myPlayer.play()
+            that.urVideo = res.data.data
+            that.cur_history = JSON.stringify(res.data.data)
+            that.setHistoryData()
+            if (that.urVideo.view_times === undefined || that.urVideo.view_times == null) {
+              that.urVideo.view_times = 27506
+            }
+            if (that.urVideo.like_times === undefined || that.urVideo.like_times == null) {
+              that.urVideo.like_times = 27936
+            }
+            //that.avatar = res.data.data.lowUrl;   
+          }
+          //console.log(that.total)
+          //that.total=res.        
+        }).catch(function(err) {
+          console.log(err)
+        })
+      }
+    },
+    getRelatedData() {
+      if (this.$route.params.no != '' || this.$route.params.no !== undefined) {
+        var a = this.commonfunc._getRandom()
+        var nonce = parseInt(a)
+        var token = this.commonfunc._gtokene(nonce)
+        var that = this
+        this.no = this.$route.params.no
+        var that = this
+        this.axios.post(this.relateUrl, this.qs.stringify({ no: this.no, page: this.page }), {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'nonce': nonce, 'token': token }
+        }).then(function(res) {
+          if (parseInt(res.data.message) == 0) {
+            that.pageList = res.data.data
+            that.total = res.data.count
+          }
+          //console.log(that.total)
+          //that.total=res.        
+        }).catch(function(err) {
+          console.log(err)
+        })
+      }
+    },
+    getViewData() {
+      if (this.$route.params.no != '' || this.$route.params.no !== undefined) {
+        var a = this.commonfunc._getRandom()
+        var nonce = parseInt(a)
+        var token = this.commonfunc._gtokene(nonce)
+        var that = this
+        this.no = this.$route.params.no
+        var that = this
+        this.axios.post(this.viewUrl, this.qs.stringify({ no: this.no }), {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'nonce': nonce, 'token': token }
+        }).then(function(res) {}).catch(function(err) {})
+      }
+    },
+    getTopData() {
+      if (this.$route.params.no != '' || this.$route.params.no !== undefined) {
+        var a = this.commonfunc._getRandom()
+        var nonce = parseInt(a)
+        var token = this.commonfunc._gtokene(nonce)
+        var that = this
+        this.no = this.$route.params.no
+        var that = this
+        this.axios.post(this.topUrl, this.qs.stringify({ no: this.no }), {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'nonce': nonce, 'token': token }
+        }).then(function(res) {
+          if (parseInt(res.data.message) == 0) {
+            that.topPageList = res.data.data
+          }
+
+        }).catch(function(err) {})
+      }
+    },
+
+    search() {
+      this.is_search = true;
+      this.cur_page = 1;
+      this.getData();
+    },
+    formatter(row, column) {
+      return row.address;
+    },
+    filterTag(value, row) {
+      return row.tag === value;
+    },
+    strLen(str) {
+      var len = 0;
+      for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        //单字节加1 
+        if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+          len++;
+        } else {
+          len += 2;
+        }
+      }
+      return len;
+    },
+  }
+}
+
+</script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+@import 'https://static-l3.xvideos-cdn.com/v-7b9fe2639d7/v3/css/player/html5.css';
+
+h1,
+h2 {
+  font-weight: normal;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+a {
+  color: #42b983;
+}
+
+.pActive {
+  color: blue;
+}
+
+</style>
+<style>
+.gli_slideIn {
+  height: 287.403px;
+}
+
+.gli_slideOut {
+  height: 272.767px;
+}
+
+.thumb-under {
+  min-height: 36px;
+}
+
+.thumb-block .after-15 {
+  display: block;
+}
+video::-webkit-media-controls-fullscreen-button {
+    display: none;
+}
+video::-webkit-media-controls-play-button {display: none;}
+video::-webkit-media-controls-timeline {display: none;}
+video::-webkit-media-controls-current-time-display{display: none;}
+video::-webkit-media-controls-time-remaining-display {display: none;}
+video::-webkit-media-controls-mute-button {display: none;}
+video::-webkit-media-controls-toggle-closed-captions-button {display: none;}
+video::-webkit-media-controls-volume-slider {display: none;}
+</style>
