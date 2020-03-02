@@ -49,7 +49,7 @@ export default {
             search_history:this.cstorage.get('_search_'),
             keywords:this.$route.params.k,
             vlogo:vlogo,
-            xlogo:'/static/xlogo.png',
+            xlogo:this.GLOBAL.serviceUrl+'pimg/xlogo.png',
             isOpen:0,
             searchList:'none'
         }
